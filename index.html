@@ -263,6 +263,70 @@
             width: 100% !important;
             height: 100% !important;
         }
+        
+        /* 得分计算页面特定样式 */
+        .editable-cell {
+            padding: 4px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: white;
+        }
+        
+        .editable-cell:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .weight-badge {
+            background-color: #6c757d;
+            color: white;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+        
+        .score-cell {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .rank-cell {
+            font-weight: 700;
+            color: #e74c3c;
+            font-size: 1.1rem;
+        }
+        
+        .control-buttons {
+            margin-bottom: 20px;
+        }
+        
+        .data-source-info {
+            background-color: #e9f7fe;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .calculation-formula {
+            background-color: #f8f9fa;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .formula-text {
+            font-family: 'Courier New', monospace;
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        
+        .weight-table th {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -285,6 +349,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="comparison-tab">
                             <i class="bi bi-bar-chart-line me-1"></i>期刊对比
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="calculation-tab">
+                            <i class="bi bi-calculator me-1"></i>得分计算
                         </a>
                     </li>
                     <li class="nav-item">
@@ -394,61 +463,7 @@
         
         <!-- 期刊对比部分 -->
         <div id="comparison-section" style="display: none;">
-            <!-- 对比设置区域 -->
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="comparison-controls">
-                        <h5 class="mb-3"><i class="bi bi-gear me-2"></i>对比设置</h5>
-                        
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button class="btn btn-primary w-100 mb-2" id="update-comparison">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>更新对比图表
-                                </button>
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-secondary w-100 mb-2" id="reset-selection">
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i>重置选择
-                                </button>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <div>
-                                        <span>期刊: <span class="badge bg-primary" id="selected-journals-count">0</span></span>
-                                        <span class="ms-2">指标: <span class="badge bg-success" id="selected-metrics-count">0</span></span>
-                                        <span class="ms-2">年份: <span class="badge bg-info" id="selected-years-count">0</span></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 图表区域 -->
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-bar-chart-line me-2"></i>期刊指标对比图表</span>
-                            <span class="badge bg-primary metrics-count-badge" id="chart-count">0 个图表</span>
-                        </div>
-                        <div class="card-body">
-                            <!-- 图表容器改为动态生成 -->
-                            <div id="charts-container">
-                                <div class="chart-placeholder">
-                                    <div class="text-center">
-                                        <i class="bi bi-bar-chart-line mb-3" style="font-size: 3rem;"></i>
-                                        <h5>请选择期刊、对比指标和年份</h5>
-                                        <p class="text-muted">选择后，系统将为每个指标生成单独的对比图表，每行显示两个图表</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+
             <!-- 选择区域 -->
             <div class="row mb-4">
                 <div class="col-md-4">
@@ -496,6 +511,61 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 对比设置区域 -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="comparison-controls">
+                        <h5 class="mb-3"><i class="bi bi-gear me-2"></i>对比设置</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100 mb-2" id="update-comparison">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>更新对比图表
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-secondary w-100 mb-2" id="reset-selection">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>重置选择
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <span>期刊: <span class="badge bg-primary" id="selected-journals-count">0</span></span>
+                                        <span class="ms-2">指标: <span class="badge bg-success" id="selected-metrics-count">0</span></span>
+                                        <span class="ms-2">年份: <span class="badge bg-info" id="selected-years-count">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-bar-chart-line me-2"></i>期刊指标对比图表</span>
+                            <span class="badge bg-primary metrics-count-badge" id="chart-count">0 个图表</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- 图表容器改为动态生成 -->
+                            <div id="charts-container">
+                                <div class="chart-placeholder">
+                                    <div class="text-center">
+                                        <i class="bi bi-bar-chart-line mb-3" style="font-size: 3rem;"></i>
+                                        <h5>请选择期刊、对比指标和年份</h5>
+                                        <p class="text-muted">选择后，系统将为每个指标生成单独的对比图表，每行显示两个图表</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- 数据表格区域 -->
             <div class="row mt-4">
@@ -524,6 +594,181 @@
             </div>
         </div>
         
+        <!-- 得分计算部分 -->
+        <div id="calculation-section" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="data-source-info">
+                        <h5><i class="bi bi-info-circle me-2"></i>数据说明</h5>
+                        <p class="mb-1">此页面基于<strong>2024年</strong>期刊数据，支持动态修改各项指标值。</p>
+                        <p class="mb-0">系统将根据修改后的数据，实时重新计算各期刊的单项得分、综合得分及最新排名。</p>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- 权重说明 -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-percent me-2"></i>指标权重说明
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered weight-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="20%">指标名称</th>
+                                            <th width="15%">权重</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>核心总被引频次</td>
+                                            <td><span class="badge bg-primary">0.26</span></td>
+                                            <td>期刊在统计年被全部统计源期刊引用的总次数</td>
+                                        </tr>
+                                        <tr>
+                                            <td>核心影响因子</td>
+                                            <td><span class="badge bg-primary">0.26</span></td>
+                                            <td>期刊前两年发表的论文在统计年被引用总次数与该期刊在前两年内发表的论文总数之比</td>
+                                        </tr>
+                                        <tr>
+                                            <td>基金论文比</td>
+                                            <td><span class="badge bg-success">0.10</span></td>
+                                            <td>期刊中各类基金资助的论文占全部论文的比例</td>
+                                        </tr>
+                                        <tr>
+                                            <td>核心他引率</td>
+                                            <td><span class="badge bg-warning">0.18</span></td>
+                                            <td>期刊被他刊引用的次数占该刊总被引次数的比例</td>
+                                        </tr>
+                                        <tr>
+                                            <td>平均引文数</td>
+                                            <td><span class="badge bg-info">0.10</span></td>
+                                            <td>期刊中平均每篇论文的参考文献数量</td>
+                                        </tr>
+                                        <tr>
+                                            <td>核心开放因子</td>
+                                            <td><span class="badge bg-secondary">0.10</span></td>
+                                            <td>期刊开放获取论文的影响力指标</td>
+                                        </tr>
+                                        <tr class="table-primary">
+                                            <td><strong>综合得分</strong></td>
+                                            <td><span class="badge bg-dark">1.00</span></td>
+                                            <td><strong>所有单项指标得分的总和</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="calculation-formula mt-3" id="calculation-formula" style="display: none;">
+                                <h6><i class="bi bi-calculator me-2"></i>得分计算公式</h6>
+                                <p class="mb-1"><strong>单项指标得分计算公式：</strong></p>
+                                <p class="formula-text">单项指标得分 = (当前值 - 最小值) / (最大值 - 最小值) × 100 × 指标权重</p>
+                                <p class="mb-1 mt-2"><strong>综合得分计算公式：</strong></p>
+                                <p class="formula-text">综合得分 = Σ(各单项指标得分)</p>
+                                <p class="mb-0 mt-2"><small class="text-muted">注：最小值与最大值为所有期刊中该指标的最小值与最大值，用于min-max归一化处理。</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="row mb-4 control-buttons">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <button class="btn btn-primary me-2" id="recalculate-scores">
+                                <i class="bi bi-calculator me-1"></i>重新计算得分
+                            </button>
+                            <button class="btn btn-success me-2" id="reset-to-original">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>恢复原始数据
+                            </button>
+                            <button class="btn btn-outline-info" id="show-calculation-info">
+                                <i class="bi bi-question-circle me-1"></i>显示计算规则
+                            </button>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary p-2">期刊数量: <span id="calculation-journal-count">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         
+            <!-- 得分计算表格 -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-table me-2"></i>期刊得分计算表 (2024年)</span>
+                            <span class="badge bg-primary" id="last-updated">最后计算: 未计算</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="calculation-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">排名</th>
+                                            <th scope="col">期刊名称</th>
+                                            <th scope="col">核心总被引频次 <span class="weight-badge">0.26</span></th>
+                                            <th scope="col">核心影响因子 <span class="weight-badge">0.26</span></th>
+                                            <th scope="col">基金论文比 <span class="weight-badge">0.10</span></th>
+                                            <th scope="col">核心他引率 <span class="weight-badge">0.18</span></th>
+                                            <th scope="col">平均引文数 <span class="weight-badge">0.10</span></th>
+                                            <th scope="col">核心开放因子 <span class="weight-badge">0.10</span></th>
+                                            <th scope="col">综合得分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="calculation-table-body">
+                                        <!-- 计算表格数据将通过JavaScript动态生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细得分表格 -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-list-check me-2"></i>详细得分表
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="detailed-score-table">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">期刊名称</th>
+                                            <th colspan="7" class="text-center">指标得分详情</th>
+                                        </tr>
+                                        <tr>
+                                            <th>核心总被引频次得分</th>
+                                            <th>核心影响因子得分</th>
+                                            <th>基金论文比得分</th>
+                                            <th>核心他引率得分</th>
+                                            <th>平均引文数得分</th>
+                                            <th>核心开放因子得分</th>
+                                            <th>综合得分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detailed-score-table-body">
+                                        <!-- 详细得分数据将通过JavaScript动态生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- 关于部分 -->
         <div id="about-section" style="display: none;">
             <div class="row">
@@ -538,11 +783,12 @@
                                 本平台用于分析2019年至2024年间学术期刊的各项指标数据，包括核心总被引频次、核心影响因子、基金论文比、核心他引率、平均引文数、核心开放因子等。
                             </p>
                             <p class="card-text">
-                                平台提供两种主要功能：
+                                平台提供三种主要功能：
                             </p>
                             <ul>
                                 <li><strong>数据总览</strong>：按年份查看期刊数据表格和关键指标统计</li>
-                                <li><strong>期刊对比</strong>：选择多个期刊、指标和年份进行对比分析，每个指标生成独立图表，每行显示两个图表</li>
+                                <li><strong>期刊对比</strong>：选择多个期刊、指标和年份进行对比分析</li>
+                                <li><strong>得分计算</strong>：动态修改期刊指标值，实时计算各项得分和排名</li>
                             </ul>
                         </div>
                     </div>
@@ -660,6 +906,18 @@
         let selectedYears = ["2019", "2020", "2021", "2022", "2023", "2024"]; // 存储选中的年份，默认全选
         let chartInstances = {}; // 存储所有图表实例
         const availableYears = Object.keys(journalData).sort(); // 所有可用的年份
+        
+        // 得分计算相关变量
+        let calculationData = []; // 用于得分计算的数据副本
+        const indicatorWeights = {
+            "核心总被引频次": 0.26,
+            "核心影响因子": 0.26,
+            "基金论文比": 0.10,
+            "核心他引率": 0.18,
+            "平均引文数": 0.10,
+            "核心开放因子": 0.10
+        };
+        let calculationCharts = []; // 得分计算页面的图表实例
 
         // ===================== 页面初始化 =====================
         document.addEventListener('DOMContentLoaded', function() {
@@ -672,6 +930,9 @@
             // 初始化年份选择列表
             initYearSelectionList();
             
+            // 初始化得分计算数据
+            initCalculationData();
+            
             // 加载初始年份的数据
             loadYearData(currentYear);
             
@@ -683,6 +944,11 @@
             
             // 设置重置选择按钮
             document.getElementById('reset-selection').addEventListener('click', resetAllSelections);
+            
+            // 设置得分计算页面按钮
+            document.getElementById('recalculate-scores').addEventListener('click', calculateAllScores);
+            document.getElementById('reset-to-original').addEventListener('click', resetToOriginalData);
+            document.getElementById('show-calculation-info').addEventListener('click', toggleCalculationInfo);
             
             // 确保默认显示总览部分
             setActiveTab('overview');
@@ -1358,10 +1624,12 @@
         function setupTabNavigation() {
             const overviewTab = document.getElementById('overview-tab');
             const comparisonTab = document.getElementById('comparison-tab');
+            const calculationTab = document.getElementById('calculation-tab');
             const aboutTab = document.getElementById('about-tab');
             
             const overviewSection = document.getElementById('overview-section');
             const comparisonSection = document.getElementById('comparison-section');
+            const calculationSection = document.getElementById('calculation-section');
             const aboutSection = document.getElementById('about-section');
             
             overviewTab.addEventListener('click', function(e) {
@@ -1372,6 +1640,11 @@
             comparisonTab.addEventListener('click', function(e) {
                 e.preventDefault();
                 setActiveTab('comparison');
+            });
+            
+            calculationTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveTab('calculation');
             });
             
             aboutTab.addEventListener('click', function(e) {
@@ -1390,6 +1663,7 @@
             // 隐藏所有部分
             document.getElementById('overview-section').style.display = 'none';
             document.getElementById('comparison-section').style.display = 'none';
+            document.getElementById('calculation-section').style.display = 'none';
             document.getElementById('about-section').style.display = 'none';
             
             // 显示选中的部分并更新导航
@@ -1405,9 +1679,273 @@
                     clearComparisonCharts();
                     clearComparisonTable();
                 }
+            } else if (tabName === 'calculation') {
+                document.getElementById('calculation-tab').classList.add('active');
+                document.getElementById('calculation-section').style.display = 'block';
+                
+                // 加载计算页面数据
+                loadCalculationData();
             } else if (tabName === 'about') {
                 document.getElementById('about-tab').classList.add('active');
                 document.getElementById('about-section').style.display = 'block';
+            }
+        }
+        
+        // ===================== 得分计算功能 =====================
+        
+        // 初始化得分计算数据
+        function initCalculationData() {
+            // 复制2024年的原始数据作为计算基础
+            calculationData = JSON.parse(JSON.stringify(journalData["2024"]));
+            
+            // 为每个期刊添加编辑状态标记
+            calculationData.forEach(journal => {
+                journal.isEdited = false;
+            });
+        }
+        
+        // 加载计算页面数据
+        function loadCalculationData() {
+            // 更新期刊数量
+            document.getElementById('calculation-journal-count').textContent = calculationData.length;
+            
+            // 清空表格
+            const calculationTableBody = document.getElementById('calculation-table-body');
+            const detailedScoreTableBody = document.getElementById('detailed-score-table-body');
+            
+            calculationTableBody.innerHTML = '';
+            detailedScoreTableBody.innerHTML = '';
+            
+            // 填充计算表格
+            calculationData.forEach((journal, index) => {
+                // 主计算表格行
+                const row = document.createElement('tr');
+                if (journal.isEdited) {
+                    row.classList.add('table-warning');
+                }
+                
+                row.innerHTML = `
+                    <td class="rank-cell">${journal["排名"] || index + 1}</td>
+                    <td><strong>${journal["期刊名称"]}</strong></td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="核心总被引频次" 
+                               value="${journal["核心总被引频次"]}" 
+                               min="0" step="1">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="核心影响因子" 
+                               value="${journal["核心影响因子"].toFixed(3)}" 
+                               min="0" step="0.001">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="基金论文比" 
+                               value="${journal["基金论文比"].toFixed(2)}" 
+                               min="0" max="1" step="0.01">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="核心他引率" 
+                               value="${journal["核心他引率"].toFixed(2)}" 
+                               min="0" max="1" step="0.01">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="平均引文数" 
+                               value="${journal["平均引文数"].toFixed(1)}" 
+                               min="0" step="0.1">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editable-cell" 
+                               data-journal="${journal["期刊名称"]}" 
+                               data-field="核心开放因子" 
+                               value="${journal["核心开放因子"]}" 
+                               min="0" step="1">
+                    </td>
+                    <td class="score-cell">${journal["综合得分"] ? journal["综合得分"].toFixed(1) : '待计算'}</td>
+                `;
+                
+                calculationTableBody.appendChild(row);
+                
+                // 详细得分表格行
+                const detailedRow = document.createElement('tr');
+                
+                // 检查是否有得分数据，如果没有，显示待计算
+                const hasScores = journal["核心总被引频次得分"] !== undefined;
+                
+                detailedRow.innerHTML = `
+                    <td><strong>${journal["期刊名称"]}</strong></td>
+                    <td>${hasScores ? journal["核心总被引频次得分"].toFixed(1) : '待计算'}</td>
+                    <td>${hasScores ? journal["核心影响因子得分"].toFixed(1) : '待计算'}</td>
+                    <td>${hasScores ? journal["基金论文比得分"].toFixed(1) : '待计算'}</td>
+                    <td>${hasScores ? journal["核心他引率得分"].toFixed(1) : '待计算'}</td>
+                    <td>${hasScores ? journal["平均引文数得分"].toFixed(1) : '待计算'}</td>
+                    <td>${hasScores ? journal["核心开放因子得分"].toFixed(1) : '待计算'}</td>
+                    <td class="score-cell">${hasScores ? journal["综合得分"].toFixed(1) : '待计算'}</td>
+                `;
+                
+                detailedScoreTableBody.appendChild(detailedRow);
+            });
+            
+            // 绑定输入框事件
+            document.querySelectorAll('.editable-cell').forEach(input => {
+                input.addEventListener('change', function() {
+                    const journalName = this.dataset.journal;
+                    const field = this.dataset.field;
+                    let value = parseFloat(this.value);
+                    
+                    // 验证输入值
+                    if (isNaN(value)) {
+                        alert('请输入有效的数值');
+                        this.value = calculationData.find(j => j["期刊名称"] === journalName)[field];
+                        return;
+                    }
+                    
+                    // 更新数据
+                    const journal = calculationData.find(j => j["期刊名称"] === journalName);
+                    journal[field] = value;
+                    journal.isEdited = true;
+                    
+                    // 标记行已编辑
+                    const row = this.closest('tr');
+                    row.classList.add('table-warning');
+                    
+                    // 更新最后更新时间
+                    document.getElementById('last-updated').textContent = '最后计算: 已修改，待重新计算';
+                });
+            });
+        }
+        
+        // 计算所有得分
+        function calculateAllScores() {
+            if (calculationData.length === 0) {
+                alert('没有可计算的数据');
+                return;
+            }
+            
+            // 收集所有期刊的指标数据
+            const indicators = ["核心总被引频次", "核心影响因子", "基金论文比", "核心他引率", "平均引文数", "核心开放因子"];
+            
+            // 计算每个指标的最小值和最大值
+            const minMaxValues = {};
+            
+            indicators.forEach(indicator => {
+                const values = calculationData.map(journal => journal[indicator]);
+                minMaxValues[indicator] = {
+                    min: Math.min(...values),
+                    max: Math.max(...values)
+                };
+            });
+            
+            // 为每个期刊计算得分
+            calculationData.forEach(journal => {
+                let totalScore = 0;
+                
+                indicators.forEach(indicator => {
+                    const value = journal[indicator];
+                    const { min, max } = minMaxValues[indicator];
+                    const weight = indicatorWeights[indicator];
+                    
+                    // 计算归一化值 (min-max归一化)
+                    let normalizedValue = 0;
+                    if (max - min !== 0) {
+                        normalizedValue = (value - min) / (max - min);
+                    }
+                    
+                    // 计算单项得分：归一化值 × 100 × 权重
+                    const score = normalizedValue * 100 * weight;
+                    
+                    // 存储单项得分
+                    journal[`${indicator}得分`] = score;
+                    
+                    // 累加到总分
+                    totalScore += score;
+                });
+                
+                // 存储综合得分
+                journal["综合得分"] = totalScore;
+            });
+            
+            // 根据综合得分重新排名
+            calculationData.sort((a, b) => b["综合得分"] - a["综合得分"]);
+            
+            calculationData.forEach((journal, index) => {
+                journal["排名"] = index + 1;
+            });
+            
+            // 更新表格显示
+            loadCalculationData();
+            
+            // 更新最后计算时间
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+            document.getElementById('last-updated').textContent = `最后计算: ${timeString}`;
+            
+            // 显示成功消息
+            showCalculationResult(minMaxValues);
+        }
+        
+        // 显示计算结果信息
+        function showCalculationResult(minMaxValues) {
+            // 创建或更新结果信息区域
+            let resultDiv = document.getElementById('calculation-result-info');
+            
+            if (!resultDiv) {
+                resultDiv = document.createElement('div');
+                resultDiv.id = 'calculation-result-info';
+                resultDiv.className = 'calculation-formula mt-3';
+                document.querySelector('.card-body').appendChild(resultDiv);
+            }
+            
+            let content = `<h6><i class="bi bi-check-circle me-2"></i>得分计算完成</h6>`;
+            content += `<p class="mb-1"><strong>各指标数据范围 (用于归一化计算)：</strong></p>`;
+            
+            for (const [indicator, range] of Object.entries(minMaxValues)) {
+                content += `<p class="mb-0 small">${indicator}: 最小值=${range.min.toFixed(2)}, 最大值=${range.max.toFixed(2)}</p>`;
+            }
+            
+            content += `<p class="mb-0 mt-2 small text-muted">已根据最新数据重新计算得分和排名，修改后的期刊已用黄色背景标记。</p>`;
+            
+            resultDiv.innerHTML = content;
+            resultDiv.style.display = 'block';
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 8000);
+        }
+        
+        // 恢复原始数据
+        function resetToOriginalData() {
+            if (confirm('确定要恢复原始数据吗？所有修改将被丢弃。')) {
+                initCalculationData();
+                loadCalculationData();
+                document.getElementById('last-updated').textContent = '最后计算: 已恢复原始数据';
+                
+                // 隐藏结果信息
+                const resultDiv = document.getElementById('calculation-result-info');
+                if (resultDiv) {
+                    resultDiv.style.display = 'none';
+                }
+            }
+        }
+        
+        // 切换计算规则显示
+        function toggleCalculationInfo() {
+            const formulaDiv = document.getElementById('calculation-formula');
+            if (formulaDiv.style.display === 'none' || formulaDiv.style.display === '') {
+                formulaDiv.style.display = 'block';
+                document.getElementById('show-calculation-info').innerHTML = '<i class="bi bi-question-circle me-1"></i>隐藏计算规则';
+            } else {
+                formulaDiv.style.display = 'none';
+                document.getElementById('show-calculation-info').innerHTML = '<i class="bi bi-question-circle me-1"></i>显示计算规则';
             }
         }
     </script>
